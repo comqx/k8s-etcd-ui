@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  etcd:
+    image: "quay.azk8s.cn/coreos/etcd:v3.3"
+    container_name: "db-etcd"
+    environment:
+      ETCD_ADVERTISE_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+      ETCDCTL_API: "3"
+    volumes:
+      - ./default.etcd:/default.etcd
+    ports:
+    - 2379:2379
+    - 2380:2380
+    - 4001:4001
+  mysql:
+    image: mysql:5.7
+    container_name: db-mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
